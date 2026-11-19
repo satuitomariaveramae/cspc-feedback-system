@@ -1,0 +1,112 @@
+<%- include('../partials/dash-open', { active: 'dashboard', pendingCount: stats.pending }) %>
+
+      <div class="dash-head">
+        <div>
+          <h1>Dashboard</h1>
+          <p>Overview of all feedback and suggestions submitted to CSPC.</p>
+        </div>
+        <div class="dash-actions">
+          <form method="GET" action="/admin/dashboard" class="dash-range">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <div class="select">
+              <select name="range" id="dashRange" aria-label="Date range">
+                <% Object.keys(ranges).forEach(k => { %>
+                  <option value="<%= k %>" <%= k === range ? 'selected' : '' %>><%= ranges[k] %></option>
+                <% }) %>
+              </select>
+            </div>
+            <noscript><button type="submit">Go</button></noscript>
+          </form>
+          <a href="/admin/dashboard/report.csv?range=<%= range %>" class="dash-btn-dark">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8M8 9h2"/></svg>
+            Generate Report
+          </a>
+        </div>
+      </div>
+
+      <section class="dash-stats">
+        <div class="dash-stat">
+          <div class="dash-stat-top"><span class="ico ico-blue"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span></div>
+          <p class="dash-stat-label">Total Submissions</p>
+          <p class="dash-stat-value"><%= stats.total %></p>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-top"><span class="ico ico-amber"><svg viewBox="0 0 24 24"><path d="M5 22h14M5 2h14"/><path d="M17 22v-4.17a2 2 0 0 0-.59-1.42L12 12l-4.41 4.41A2 2 0 0 0 7 17.83V22"/><path d="M7 2v4.17a2 2 0 0 0 .59 1.42L12 12l4.41-4.41A2 2 0 0 0 17 6.17V2"/></svg></span></div>
+          <p class="dash-stat-label">Pending</p>
+          <p class="dash-stat-value"><%= stats.pending %></p>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-top"><span class="ico ico-indigo"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span></div>
+          <p class="dash-stat-label">In Review</p>
+          <p class="dash-stat-value"><%= stats.inReview %></p>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-top"><span class="ico ico-green"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg></span></div>
+          <p class="dash-stat-label">Resolved</p>
+          <p class="dash-stat-value"><%= stats.resolved %></p>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-top"><span class="ico ico-purple"><svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7z"/></svg></span></div>
+          <p class="dash-stat-label">Avg. Rating</p>
+          <p class="dash-stat-value">
+            <% if (stats.avgRating) { %><%= stats.avgRating.toFixed(1) %><small>/5</small><% } else { %>&mdash;<% } %>
+          </p>
+        </div>
+      </section>
+
+      <section class="dash-charts">
+        <div class="dash-card">
+          <h2>By Category</h2>
+          <%- include('../partials/dash-chart', {
+            rows: byCategory.map(c => ({ label: c.category, title: c.category, c: c.c })),
+            colors: ['#818cf8', '#2563eb', '#1e3a8a']
+          }) %>
+        </div>
+        <div class="dash-card">
+          <h2>By College / Department</h2>
+          <%- include('../partials/dash-chart', {
+            rows: byCollege.map(c => ({ label: shortCollege(c.college), title: c.college, c: c.c })),
+            colors: ['#bfdbfe', '#93c5fd', '#60a5fa', '#3b82f6', '#2563eb']
+          }) %>
+        </div>
+      </section>
+
+      <section class="dash-card dash-table-card">
+        <div class="dash-card-head">
+          <h2>Recent Submissions</h2>
+          <a href="/admin/feedbacks" class="dash-btn-blue">View All</a>
+        </div>
+        <div class="dash-table-wrap">
+          <table class="dash-table">
+            <thead>
+              <tr>
+                <th>Ticket</th>
+                <th>Subject</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th class="right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% recent.forEach(fb => { %>
+                <tr>
+                  <td class="nowrap ticket"><%= fb.ticket_no %></td>
+                  <td class="subject"><%= fb.subject %></td>
+                  <td class="cat"><%= fb.category %></td>
+                  <td class="nowrap type"><%= fb.feedback_type %></td>
+                  <td class="nowrap"><span class="dash-badge <%= statusClass(fb.status) %>"><span class="b-dot"></span><%= fb.status %></span></td>
+                  <td class="nowrap date"><%= new Date(String(fb.created_at).replace(' ', 'T') + 'Z').toLocaleDateString('en-PH', { timeZone: 'Asia/Manila' }) %><br><span style="color:#9ca3af"><%= new Date(String(fb.created_at).replace(' ', 'T') + 'Z').toLocaleTimeString('en-PH', { timeZone: 'Asia/Manila', hour: 'numeric', minute: '2-digit' }) %></span></td>
+                  <td class="right"><a href="/admin/feedbacks/<%= fb.id %>" class="dash-btn-view">View</a></td>
+                </tr>
+              <% }) %>
+              <% if (recent.length === 0) { %>
+                <tr><td colspan="7" class="dash-empty">No feedback submitted in this period.</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <script src="/js/select.js"></script>
+<%- include('../partials/dash-close') %>

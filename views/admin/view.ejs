@@ -1,0 +1,71 @@
+<%- include('../partials/dash-open', { active: 'feedback', pendingCount: pendingCount }) %>
+<%
+  const fmt = (v) => new Date(String(v).replace(' ', 'T') + 'Z').toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
+%>
+      <a href="/admin/feedbacks" class="dash-back">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        Back to All Feedback
+      </a>
+
+      <div class="dash-detail-grid">
+        <section class="dash-card dash-detail">
+          <div class="dash-detail-top">
+            <h2 class="dash-ticket"><%= fb.ticket_no %></h2>
+            <span class="dash-badge <%= statusClass(fb.status) %>"><span class="b-dot"></span><%= fb.status %></span>
+          </div>
+
+          <h1 class="dash-detail-subject"><%= fb.subject %></h1>
+
+          <div class="dash-chips">
+            <span class="dash-chip"><%= fb.feedback_type %></span>
+            <span class="dash-chip"><%= fb.category %></span>
+            <span class="dash-chip"><%= fb.college %></span>
+            <% if (fb.rating) { %>
+              <span class="dash-chip dash-chip-rating" title="Rating"><%= '★'.repeat(fb.rating) %><span class="off"><%= '★'.repeat(5 - fb.rating) %></span></span>
+            <% } %>
+          </div>
+
+          <div class="dash-message"><%= fb.message %></div>
+
+          <div class="dash-submitter">
+            <h3>Submitted By</h3>
+            <% if (fb.is_anonymous) { %>
+              <p class="muted">Anonymous submission &mdash; no personal information provided.</p>
+            <% } else { %>
+              <dl>
+                <div><dt>Name</dt><dd><%= fb.full_name || '—' %></dd></div>
+                <div><dt>ID</dt><dd><%= fb.student_id || '—' %></dd></div>
+                <div><dt>Email</dt><dd><%= fb.email || '—' %></dd></div>
+              </dl>
+            <% } %>
+            <p class="small">Submitted on <%= fmt(fb.created_at) %></p>
+            <% if (fb.updated_at && fb.updated_at !== fb.created_at) { %>
+              <p class="small">Last updated <%= fmt(fb.updated_at) %></p>
+            <% } %>
+          </div>
+        </section>
+
+        <section class="dash-card dash-manage">
+          <h2>Manage This Entry</h2>
+          <form action="/admin/feedbacks/<%= fb.id %>/status" method="POST">
+            <div class="dash-field">
+              <label for="status">Status</label>
+              <div class="select">
+                <select id="status" name="status">
+                  <% STATUSES.forEach(s => { %>
+                    <option value="<%= s %>" <%= fb.status === s ? 'selected' : '' %>><%= s %></option>
+                  <% }) %>
+                </select>
+              </div>
+            </div>
+            <div class="dash-field">
+              <label for="admin_notes">Response / Internal Notes</label>
+              <textarea id="admin_notes" name="admin_notes" rows="6" placeholder="This note is visible to the submitter when they track their ticket."><%= fb.admin_notes || '' %></textarea>
+            </div>
+            <button type="submit" class="dash-btn-blue dash-btn-block">Save Changes</button>
+          </form>
+        </section>
+      </div>
+
+      <script src="/js/select.js"></script>
+<%- include('../partials/dash-close') %>

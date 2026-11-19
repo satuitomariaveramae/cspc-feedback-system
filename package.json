@@ -1,0 +1,26 @@
+{
+  "name": "cspc-feedback-system",
+  "version": "1.0.0",
+  "description": "School Feedback/Suggestion System for Camarines Sur Polytechnic Colleges (CSPC)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "db:setup": "node setup-db.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "nodemailer": "^10.0.11",
+    "mysql2": "^3.11.0",
+    "express-mysql-session": "^3.0.3",
+    "express-async-errors": "^3.1.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

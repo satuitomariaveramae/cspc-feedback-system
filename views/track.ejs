@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/pub-head') %>
+</head>
+<body class="pub-page">
+  <%- include('partials/pub-header', { active: 'track' }) %>
+
+  <section class="hero hero-compact">
+    <div class="wrap hero-inner">
+      <span class="hero-chip"><%- icon('search', 12) %> Keep updated on your submissions</span>
+      <h1>Track Status</h1>
+      <p>Enter your unique ticket number to check the current progress and institutional response.</p>
+    </div>
+  </section>
+
+  <main class="wrap track-wrap">
+    <div class="track-col">
+
+      <section class="track-card">
+        <div class="track-kicker"><span class="diamond"></span> Track Your Feedback</div>
+
+        <% const notFound = searched && !result; %>
+        <form action="/track#result" method="POST" novalidate>
+          <label class="lbl" for="ticket_no">Ticket Number</label>
+          <input type="text" id="ticket_no" name="ticket_no" value="<%= typeof ticket_no !== 'undefined' ? ticket_no : '' %>"
+                 placeholder="Enter your ticket number" maxlength="40" autocomplete="off" autocapitalize="characters" spellcheck="false"
+                 required<%- notFound ? ' aria-invalid="true" aria-describedby="ticketError" class="is-invalid"' : ' aria-describedby="ticketHelp"' %>>
+          <% if (notFound) { %>
+            <p class="track-error" id="ticketError" role="alert"><%- icon('info', 16) %><span>We couldn't find a submission with that ticket number. Please check it and try again.</span></p>
+          <% } else { %>
+            <p class="track-help" id="ticketHelp">You were given this number on the confirmation page right after you submitted.</p>
+          <% } %>
+          <button type="submit" class="btn-check">Check Status <%- icon('arrow-right', 16) %></button>
+        </form>
+      </section>
+
+      <% if (result) { %>
+        <%
+          const cur = STATUSES.indexOf(result.status);
+          const statusClass = 'status-' + result.status.replace(/\s+/g, '-').toLowerCase();
+        %>
+        <section class="track-card result-card" id="result" aria-live="polite">
+          <div class="result-top">
+            <span class="ticket-code"><%= result.ticket_no %></span>
+            <span class="status-pill <%= statusClass %>"><%= result.status %></span>
+          </div>
+          <h2 class="result-subject"><%= result.subject %></h2>
+
+          <ol class="steps" aria-label="Progress">
+            <% STATUSES.forEach((st, i) => { %>
+              <li class="<%= i < cur ? 'done' : (i === cur ? 'current' : '') %>"<%- i === cur ? ' aria-current="step"' : '' %>>
+                <span class="dot"><%- i < cur ? icon('check', 12) : '' %></span>
+                <span><%= st %></span>
+              </li>
+            <% }) %>
+          </ol>
+
+          <dl class="meta-grid">
+            <div><dt>Type</dt><dd><%= result.feedback_type %></dd></div>
+            <div><dt>Category</dt><dd><%= result.category %></dd></div>
+            <div class="wide"><dt>College / Department</dt><dd><%= result.college %></dd></div>
+            <div><dt>Submitted</dt><dd><%= submittedAt %></dd></div>
+            <div><dt>Last updated</dt><dd><%= updatedAt %></dd></div>
+          </dl>
+
+          <% if (result.admin_notes) { %>
+            <div class="response">
+              <div class="response-head"><%- icon('message-circle', 16) %> Response from CSPC</div>
+              <p><%= result.admin_notes %></p>
+            </div>
+          <% } else { %>
+            <div class="response empty">
+              <div class="response-head"><%- icon('message-circle', 16) %> Response from CSPC</div>
+              <p>No response yet. Updates will appear here once your submission has been reviewed.</p>
+            </div>
+          <% } %>
+        </section>
+      <% } %>
+
+      <aside class="info-box">
+        <span class="info-icon"><%- icon('info', 18) %></span>
+        <div>
+          <h3>Lost your ticket number?</h3>
+          <p>If you cannot find your ticket number, please visit the Office of Student Affairs &amp; Services in person or call <%= SUPPORT.phone %>. Anonymous submissions can only be found with their ticket number. For what each status means, see the <a href="/help">Help Center</a>.</p>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <%- include('partials/pub-footer') %>
+</body>
+</html>

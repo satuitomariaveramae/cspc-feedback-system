@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/pub-head') %>
+</head>
+<body class="pub-page">
+<%- include('partials/pub-header', { active: 'help' }) %>
+
+  <section class="hero hero-compact">
+    <div class="wrap hero-inner">
+      <span class="hero-chip"><%- icon('circle-help', 12) %> We're here to help</span>
+      <h1>Help Center</h1>
+      <p>Answers to common questions about submitting and tracking feedback with the CSPC Feedback &amp; Suggestion System.</p>
+    </div>
+  </section>
+
+  <main class="wrap hp-wrap">
+    <div class="hp-col">
+
+      <section class="hp-card">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq">
+          <details class="faq-item">
+            <summary>How do I submit feedback? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p>Open the Submit page, choose the type of submission, select the college and category that apply, and fill in the subject and message. After you submit, the system gives you a tracking ticket number.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>What types of submissions can I make? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p>You can send a Feedback, Suggestion, Complaint, or Commendation. Choose the one that best describes your message so that it reaches the right office.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>What is a ticket number, and why do I need it? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p>Every submission receives a unique ticket number (for example, CSPC-2026-0003). It is the only way to check the status of your submission, so please save it right after you submit.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>I lost my ticket number. What can I do? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p>Please visit the Office of Student Affairs and Services in person or call <%= SUPPORT.phone %> during office hours. Bring the subject of your submission and the approximate date you sent it so the staff can help you find it. Anonymous submissions can only be found with their ticket number.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>What do the status labels mean? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body">
+              <ul class="faq-list">
+                <li><strong>Pending</strong> &ndash; Your submission has been received and is waiting to be reviewed.</li>
+                <li><strong>In Review</strong> &ndash; The office is currently reviewing your submission.</li>
+                <li><strong>Resolved</strong> &ndash; Action has been taken on your concern, or a response has been provided.</li>
+                <li><strong>Closed</strong> &ndash; The submission has been completed and closed.</li>
+              </ul>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>How long does it take to get a response? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p>We aim to review submissions within <%= SUPPORT.response %>. Some concerns may take longer if they involve other offices.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>What does &ldquo;Submit Anonymously&rdquo; do? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p>When you turn it on, your name and email are not saved with your submission. Because there is no email on record, please keep your ticket number safe, since it is the only way to follow up.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>Who can see my submission? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p>Your submission is visible only to authorized staff of the Office of Student Affairs and Services, who review and act on it.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>Which category should I choose? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p>Choose the area your message is about: <%= CATEGORIES.join(', ') %>. If you are not sure, choose Other and the office will route it.</p></div>
+          </details>
+        </div>
+      </section>
+
+      <section class="hp-card" id="contact">
+        <h2>Need more help?</h2>
+        <p class="hp-sub">If you cannot find the answer above, contact us:</p>
+        <dl class="hp-contact">
+          <div><dt>Office</dt><dd>Office of Student Affairs and Services<br>Camarines Sur Polytechnic Colleges</dd></div>
+          <div><dt>Phone</dt><dd><%= SUPPORT.phone %></dd></div>
+          <div><dt>Office hours</dt><dd><%= SUPPORT.hours %></dd></div>
+          <div><dt>Location</dt><dd><%= SUPPORT.location %></dd></div>
+        </dl>
+      </section>
+
+      <aside class="hp-notice" role="note">
+        <span class="hp-notice-icon"><%- icon('alert-triangle', 18) %></span>
+        <div>
+          <strong>This system is not for emergencies.</strong>
+          <p>If you or someone else is in immediate danger, or you need urgent help with a safety concern, please go directly to the Office of Student Affairs and Services or the campus guidance office, or contact your local emergency services.</p>
+        </div>
+      </aside>
+
+      <div class="hp-links">
+        <a href="/" class="btn btn-primary">Submit Feedback <%- icon('arrow-right', 16) %></a>
+        <a href="/track" class="btn btn-ghost">Track Status</a>
+      </div>
+
+    </div>
+  </main>
+
+  <%- include('partials/pub-footer') %>
+</body>
+</html>

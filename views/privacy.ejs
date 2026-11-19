@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/pub-head') %>
+</head>
+<body class="pub-page">
+<%- include('partials/pub-header', { active: 'privacy' }) %>
+
+  <section class="hero hero-compact">
+    <div class="wrap hero-inner">
+      <span class="hero-chip"><%- icon('shield-check', 12) %> Your data</span>
+      <h1>Privacy Policy</h1>
+      <p>How the CSPC Feedback &amp; Suggestion System collects, uses, and protects your information.</p>
+    </div>
+  </section>
+
+  <main class="wrap hp-wrap">
+    <div class="hp-col">
+
+      <section class="hp-card">
+        <h2>Privacy at a glance</h2>
+        <p class="hp-sub">Select a topic to read more.</p>
+        <div class="faq">
+          <details class="faq-item">
+            <summary>What information do we collect? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p style="margin-bottom:10px">When you submit, we collect:</p><ul class="faq-list"><li><strong>Your submission</strong> &ndash; type, college, category, subject, message, and optional rating.</li><li><strong>Your details</strong> &ndash; name, email, and student ID (optional). Collected only if you do not turn on &ldquo;Submit Anonymously.&rdquo;</li><li><strong>Ticket information</strong> &ndash; ticket number, status, date submitted, and notes added by staff.</li></ul></div>
+          </details>
+          <details class="faq-item">
+            <summary>How do we use your information? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><ul class="faq-list"><li>To receive, review, and act on your feedback, suggestion, or concern.</li><li>To give you a ticket number so you can track your submission.</li><li>To send you a confirmation email, if you provided an email address.</li><li>To prepare summary reports (such as counts per category or college) that help the school improve its services.</li></ul><p style="margin-top:10px">We do not sell your information or use it for advertising.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>Who can see my submission? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p>Only authorized staff of the Office of Student Affairs and Services can see and respond to your submission. The public pages never show your name, email, subject, or message.</p><p style="margin-top:10px">Anyone who has your ticket number can see the status of that ticket, so please keep it private. Notification and confirmation emails go through an email service, which handles the message only to deliver it.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>How long do we keep your data? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p>Submissions are kept only as long as needed to handle your concern and to meet the school&rsquo;s record-keeping requirements. After that, they are deleted or anonymized.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>What are my rights? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p>Under the Data Privacy Act of 2012 (Republic Act No. 10173), you have the right to be informed about how your data is used, to access and correct it, to object to its processing, and to request that it be deleted or blocked. To make a request or raise a concern, please see the <a href="/contact">Contact</a> page.</p></div>
+          </details>
+        </div>
+      </section>
+
+      <aside class="hp-notice" role="note">
+        <span class="hp-notice-icon"><%- icon('shield-check', 18) %></span>
+        <div>
+          <strong>Want to stay unnamed?</strong>
+          <p>Turn on &ldquo;Submit Anonymously&rdquo; on the form. Your name, email, and student ID will not be saved with your submission.</p>
+        </div>
+      </aside>
+
+      <div class="hp-links">
+        <a href="/" class="btn btn-primary">Submit Feedback <%- icon('arrow-right', 16) %></a>
+        <a href="/terms" class="btn btn-ghost">Terms of Use</a>
+      </div>
+
+    </div>
+  </main>
+
+  <%- include('partials/pub-footer') %>
+</body>
+</html>

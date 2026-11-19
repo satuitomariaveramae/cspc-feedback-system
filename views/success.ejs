@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/pub-head') %>
+</head>
+<body class="pub-page sx-page">
+  <%- include('partials/pub-header', { active: 'submit' }) %>
+
+  <main class="sx-main">
+    <section class="sx-card" role="status" aria-live="polite">
+      <div class="sx-icon"><%- icon('check', 24) %></div>
+      <h1>Thank You!</h1>
+      <p class="sx-lead">Your <%= (fb.feedback_type || 'suggestion').toLowerCase() %> has been received by the <strong>CSPC Feedback &amp; Suggestion System</strong>.</p>
+
+      <div class="sx-ticket">
+        <span class="sx-ticket-label">Your Tracking Ticket Number</span>
+        <span class="sx-ticket-no"><%= fb.ticket_no %></span>
+        <span class="sx-ticket-hint">Please save this ticket number to track your submission</span>
+      </div>
+
+      <div class="sx-actions">
+        <a href="/track?ticket=<%= encodeURIComponent(fb.ticket_no) %>" class="sx-btn sx-btn-outline"><%- icon('search', 14) %> Track This Ticket</a>
+        <a href="/" class="sx-btn sx-btn-primary">Submit Another <%- icon('arrow-right', 14) %></a>
+      </div>
+    </section>
+  </main>
+
+  <%- include('partials/pub-footer') %>
+</body>
+</html>

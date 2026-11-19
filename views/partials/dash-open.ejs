@@ -1,0 +1,111 @@
+<%
+  const _active = (typeof active !== 'undefined') ? active : '';
+  const _pending = (typeof pendingCount !== 'undefined') ? pendingCount : 0;
+  const _search = (typeof searchValue !== 'undefined') ? searchValue : '';
+  const _hideSearch = (typeof hideSearch !== 'undefined') && hideSearch;
+  const initials = String(admin.full_name || 'A').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('');
+  const publicUrl = (typeof SPLIT_MODE !== 'undefined' && SPLIT_MODE) ? PUBLIC_URL : '/';
+%><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | CSPC Feedback &amp; Suggestion System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="icon" href="/images/cspc-logo.png">
+</head>
+<body class="dash">
+  <div class="dash-notif-overlay" id="dashNotifOverlay" aria-hidden="true"></div>
+
+  <aside class="dash-side">
+    <a href="/admin/dashboard" class="dash-brand">
+      <img src="/images/cspc-logo-sm.png" alt="CSPC Seal">
+      <span>
+        <strong>CSPC Feedback</strong>
+        <small>Admin Portal</small>
+      </span>
+    </a>
+
+    <p class="dash-side-label">Core</p>
+    <nav class="dash-nav">
+      <a href="/admin/dashboard" class="<%= _active === 'dashboard' ? 'active' : '' %>">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        Dashboard
+      </a>
+      <a href="/admin/feedbacks" class="<%= _active === 'feedback' ? 'active' : '' %>">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        All Feedback
+      </a>
+      <a href="<%= publicUrl %>" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
+        View Public Form
+      </a>
+    </nav>
+  </aside>
+
+  <div class="dash-wrap">
+    <header class="dash-top">
+      <% if (!_hideSearch) { %>
+      <form action="/admin/feedbacks" method="GET" class="dash-search" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7.5"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" name="q" value="<%= _search %>" placeholder="Search anything..." aria-label="Search feedback">
+      </form>
+      <% } %>
+
+      <div class="dash-top-right">
+        <% const _n = (typeof notif !== 'undefined' && notif) ? notif : { count: _pending, items: [] }; %>
+        <div class="dash-notif" id="dashNotif">
+          <button type="button" class="dash-bell" id="dashBell" aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            <% if (_n.count > 0) { %><span class="dash-bell-badge"><%= _n.count > 9 ? '9+' : _n.count %></span><% } %>
+          </button>
+          <div class="dash-notif-panel" id="dashNotifPanel" hidden>
+            <div class="dash-notif-head">
+              <strong>Notifications</strong>
+              <% if (_n.count > 0) { %><span><%= _n.count %> pending</span><% } %>
+            </div>
+            <% if (_n.items.length === 0) { %>
+              <div class="dash-notif-empty">You're all caught up.</div>
+            <% } else { %>
+              <ul class="dash-notif-list">
+                <% _n.items.forEach(function (it) { %>
+                  <li>
+                    <a href="/admin/feedbacks/<%= it.id %>">
+                      <span class="dash-notif-line">
+                        <span class="dash-notif-ticket"><%= it.ticket_no %></span>
+                        <span class="dash-notif-tag<%= it.type === 'Complaint' ? ' is-complaint' : '' %>"><%= it.type %></span>
+                      </span>
+                      <span class="dash-notif-subject"><%= it.subject %></span>
+                      <span class="dash-notif-time"><%= it.ago %></span>
+                    </a>
+                  </li>
+                <% }) %>
+              </ul>
+            <% } %>
+            <a href="/admin/feedbacks?status=Pending" class="dash-notif-foot">View all pending</a>
+          </div>
+        </div>
+        <span class="dash-vsep"></span>
+        <div class="dash-user">
+          <div class="dash-user-text">
+            <strong><%= admin.full_name %></strong>
+            <span class="dash-role">Admin</span>
+          </div>
+          <span class="dash-avatar" aria-hidden="true"><%= initials %></span>
+        </div>
+        <form action="/admin/logout" method="POST" id="logoutForm">
+          <button type="submit" class="dash-logout">Log Out</button>
+        </form>
+      </div>
+    </header>
+
+    <main class="dash-main">
+      <% if (typeof flash !== 'undefined' && flash && !flash.field) { %>
+        <div class="dash-flash dash-flash-<%= flash.type %>" id="dashFlash">
+          <span><%= flash.text %></span>
+          <button type="button" aria-label="Dismiss" id="dashFlashClose">&times;</button>
+        </div>
+      <% } %>
+

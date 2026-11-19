@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/pub-head') %>
+</head>
+<body class="pub-page">
+<%- include('partials/pub-header', { active: 'terms' }) %>
+
+  <section class="hero hero-compact">
+    <div class="wrap hero-inner">
+      <span class="hero-chip"><%- icon('info', 12) %> Please read</span>
+      <h1>Terms of Use</h1>
+      <p>The rules for using the CSPC Feedback &amp; Suggestion System.</p>
+    </div>
+  </section>
+
+  <main class="wrap hp-wrap">
+    <div class="hp-col">
+
+      <section class="hp-card">
+        <h2>Terms at a glance</h2>
+        <p class="hp-sub">Select a topic to read more.</p>
+        <div class="faq">
+          <details class="faq-item">
+            <summary>What is this system for? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p>This system is for sending genuine feedback, suggestions, complaints, and concerns about Camarines Sur Polytechnic Colleges (CSPC), its services, and its facilities. By submitting, you agree to these terms.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>What do I agree to when I submit? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><ul class="faq-list"><li>Provide honest and accurate information.</li><li>Keep your message respectful. Abusive, threatening, discriminatory, or obscene content is not allowed.</li><li>Do not submit spam, false reports, or messages meant to harass or defame others.</li><li>Do not pretend to be another person or submit on someone else&rsquo;s behalf without their consent.</li><li>Do not include sensitive personal information (such as passwords or ID numbers) in your message.</li></ul></div>
+          </details>
+          <details class="faq-item">
+            <summary>How are submissions handled? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><ul class="faq-list"><li>Submissions are reviewed by authorized staff of the Office of Student Affairs and Services.</li><li>Staff may categorize, forward to the proper office, or close a submission, and may reject one that breaks these terms.</li><li>We aim to review submissions within <%= SUPPORT.response %>, but we cannot guarantee a specific outcome or that a suggestion will be adopted.</li><li>Anonymous submissions can be followed up only through their ticket number.</li></ul></div>
+          </details>
+          <details class="faq-item">
+            <summary>How is my information used? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p>How your information is collected and used is explained in the <a href="/privacy">Privacy Policy</a>.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>Can these terms change? <%- icon('chevron-down', 18) %></summary>
+            <div class="faq-body"><p>These terms may be updated from time to time. Continued use of the system means you accept the latest version.</p></div>
+          </details>
+        </div>
+      </section>
+
+      <aside class="hp-notice" role="note">
+        <span class="hp-notice-icon"><%- icon('alert-triangle', 18) %></span>
+        <div>
+          <strong>This system is not for emergencies.</strong>
+          <p>It is not monitored in real time. For urgent or safety concerns, go directly to the Office of Student Affairs and Services or contact your local emergency services.</p>
+        </div>
+      </aside>
+
+      <div class="hp-links">
+        <a href="/" class="btn btn-primary">Submit Feedback <%- icon('arrow-right', 16) %></a>
+        <a href="/privacy" class="btn btn-ghost">Privacy Policy</a>
+      </div>
+
+    </div>
+  </main>
+
+  <%- include('partials/pub-footer') %>
+</body>
+</html>

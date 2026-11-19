@@ -1,0 +1,64 @@
+# Example nginx config for the split portals.
+# Both server blocks proxy to the SAME Node process (npm start, PORT=3000).
+# Adjust server_name, certificate paths and the allowed networks.
+
+# ---------- Public portal: students, no login ----------
+server {
+    listen 443 ssl;
+    server_name feedback.cspc.edu.ph;
+
+    ssl_certificate     /etc/ssl/cspc/feedback.cspc.edu.ph.crt;
+    ssl_certificate_key /etc/ssl/cspc/feedback.cspc.edu.ph.key;
+
+    client_max_body_size 1m;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+# ---------- Admin portal: staff only ----------
+server {
+    listen 443 ssl;
+    server_name admin-feedback.cspc.edu.ph;
+
+    ssl_certificate     /etc/ssl/cspc/admin-feedback.cspc.edu.ph.crt;
+    ssl_certificate_key /etc/ssl/cspc/admin-feedback.cspc.edu.ph.key;
+
+    # Only allow the campus network / VPN. Replace with CSPC's real ranges.
+    allow 192.168.0.0/16;
+    allow 10.0.0.0/8;
+    deny  all;
+
+    # Slow down password guessing on the login and reset endpoints.
+    location ~ ^/admin/(login|forgot-password|resend-code|reset-password) {
+        limit_req zone=admin_login burst=5 nodelay;
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+# Put this once in the http {} block of nginx.conf:
+#   limit_req_zone $binary_remote_addr zone=admin_login:10m rate=10r/m;
+
+# Optional: redirect plain HTTP to HTTPS
+server {
+    listen 80;
+    server_name feedback.cspc.edu.ph admin-feedback.cspc.edu.ph;
+    return 301 https://$host$request_uri;
+}

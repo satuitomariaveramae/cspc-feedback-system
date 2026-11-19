@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/pub-head') %>
+</head>
+<body class="pub-page">
+  <%- include('partials/pub-header', { active: 'submit' }) %>
+
+  <section class="hero hero-compact">
+    <div class="wrap hero-inner">
+      <span class="hero-chip"><%- icon('sparkles', 12) %> Your voice shapes our campus</span>
+      <h1>Submit Feedback</h1>
+      <p>Share your thoughts on academics, facilities, or services. Every response helps us build a better learning experience.</p>
+    </div>
+  </section>
+
+  <main class="wrap layout">
+    <div class="col-main">
+      <% if (typeof flash !== 'undefined' && flash && !flash.field) { %>
+        <div class="notice notice-<%= flash.type %>" role="alert"><%= flash.text %></div>
+      <% } %>
+      <div class="notice notice-info" id="draftNotice" hidden>
+        <span>Draft restored from this device.</span>
+        <button type="button" class="link-btn" id="discardDraft">Discard</button>
+      </div>
+
+      <form action="/submit" method="POST" id="feedbackForm" novalidate>
+
+        <!-- Your Information -->
+        <section class="card">
+          <div class="card-head card-head-split">
+            <div>
+              <h2>Your Information</h2>
+              <p class="card-sub">Tell us who you are, or keep it private.</p>
+            </div>
+            <label class="anon" for="is_anonymous">
+              <span>Submit Anonymously</span>
+              <input type="checkbox" name="is_anonymous" id="is_anonymous" role="switch">
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+          </div>
+
+          <div id="identityFields">
+            <div class="grid-2">
+              <div class="field">
+                <label for="full_name">Full Name <span class="req">*</span></label>
+                <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" autocomplete="name" required>
+                <p class="field-error" hidden></p>
+              </div>
+              <div class="field">
+                <label for="student_id">Student / Employee ID</label>
+                <input type="text" id="student_id" name="student_id" placeholder="Enter your student or employee ID">
+              </div>
+            </div>
+            <div class="field">
+              <label for="email">Email Address <span class="req">*</span></label>
+              <div class="input-icon">
+                <%- icon('mail', 16) %>
+                <input type="email" id="email" name="email" placeholder="Enter your email address" autocomplete="email" required>
+              </div>
+              <p class="field-error" hidden></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Feedback Details -->
+        <section class="card">
+          <div class="card-head">
+            <h2>Feedback Details</h2>
+            <p class="card-sub">Help us route this to the right team.</p>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="college">College / Department <span class="req">*</span></label>
+              <div class="select">
+                <select id="college" name="college" required>
+                  <option value="" disabled selected>Select department</option>
+                  <% COLLEGES.forEach(c => { %><option value="<%= c %>"><%= c %></option><% }) %>
+                </select>
+                <%- icon('chevron-down', 16) %>
+              </div>
+              <p class="field-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="category">Category <span class="req">*</span></label>
+              <div class="select">
+                <select id="category" name="category" required>
+                  <option value="" disabled selected>Select category</option>
+                  <% CATEGORIES.forEach(c => { %><option value="<%= c %>"><%= c %></option><% }) %>
+                </select>
+                <%- icon('chevron-down', 16) %>
+              </div>
+              <p class="field-error" hidden></p>
+            </div>
+          </div>
+
+          <% const TYPE_ICONS = { Feedback: 'message-circle', Suggestion: 'lightbulb', Complaint: 'alert-triangle', Commendation: 'award' }; %>
+          <fieldset class="field type-field">
+            <legend>Type of Submission</legend>
+            <div class="pills">
+              <% TYPES.forEach((t, i) => { %>
+                <input type="radio" name="feedback_type" id="type_<%= i %>" value="<%= t %>" <%= i === 0 ? 'checked' : '' %>>
+                <label for="type_<%= i %>" class="pill"><%- icon(TYPE_ICONS[t] || 'message-circle', 14) %><%= t %></label>
+              <% }) %>
+            </div>
+          </fieldset>
+        </section>
+
+        <!-- Message -->
+        <section class="card">
+          <div class="card-head">
+            <h2>Message</h2>
+            <p class="card-sub">Describe your experience in detail.</p>
+          </div>
+
+          <div class="field">
+            <label for="subject">Subject <span class="req">*</span></label>
+            <input type="text" id="subject" name="subject" maxlength="120" placeholder="Brief summary of your feedback" required>
+            <p class="field-error" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="message">Detailed Feedback <span class="req">*</span></label>
+            <textarea id="message" name="message" rows="5" maxlength="1000" placeholder="Please share what went well, what needs improvement, and any suggestions you have…" required></textarea>
+            <p class="field-error" hidden></p>
+            <div class="textarea-foot"><span class="char-count"><span id="charCount">0</span> / 1000</span></div>
+          </div>
+        </section>
+
+        <!-- Satisfaction -->
+        <section class="card">
+          <div class="card-head">
+            <h2>Satisfaction</h2>
+            <p class="card-sub">How would you rate your overall experience?</p>
+          </div>
+          <div class="stars" id="stars" role="radiogroup" aria-label="Overall satisfaction">
+            <% for (let i = 1; i <= 5; i++) { %>
+              <input type="radio" name="rating" id="star_<%= i %>" value="<%= i %>">
+              <label for="star_<%= i %>" class="star" title="<%= i %> out of 5"><%- icon('star', 28) %></label>
+            <% } %>
+          </div>
+          <p class="hint" id="starHint" aria-live="polite">Click a star to rate</p>
+        </section>
+
+        <!-- Actions -->
+        <div class="actions">
+          <p class="privacy-note"><%- icon('shield-check', 16) %><span>Your feedback is encrypted and reviewed within 48 hours.</span></p>
+          <button type="button" class="btn btn-ghost" id="saveDraft">Save Draft</button>
+          <button type="submit" class="btn btn-primary">Submit Feedback <%- icon('arrow-right', 16) %></button>
+        </div>
+      </form>
+    </div>
+
+    <aside class="col-side">
+            <section class="side-card">
+        <h3>Recent Submissions</h3>
+        <% if (recent && recent.length) { %>
+          <ul class="recent">
+            <% recent.forEach(r => { %>
+              <li>
+                <span class="recent-icon recent-<%= r.kind %>"><%- icon(r.kind === 'done' ? 'check' : 'clock', 14) %></span>
+                <span class="recent-body">
+                  <span class="recent-title"><%= r.title %></span>
+                  <span class="recent-meta"><%= r.label %> &middot; <%= r.ago %></span>
+                </span>
+              </li>
+            <% }) %>
+          </ul>
+        <% } else { %>
+          <p class="recent-empty">No submissions yet. Yours could be the first.</p>
+        <% } %>
+        <a href="/track" class="side-link">View all submissions <%- icon('chevron-right', 14) %></a>
+      </section>
+
+      <section class="help-card">
+        <span class="help-icon"><%- icon('headphones', 16) %></span>
+        <h3>Need help?</h3>
+        <p>Our student affairs team is ready to assist you with any concerns.</p>
+        <ul>
+          <li><%- icon('phone', 14) %><span><%= SUPPORT.phone %></span></li>
+          <li><%- icon('circle-help', 14) %><a href="/help">Visit the Help Center</a></li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+  <%- include('partials/pub-footer') %>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="/js/submit.js"></script>
+  <script src="/js/select.js"></script>
+</body>
+</html>

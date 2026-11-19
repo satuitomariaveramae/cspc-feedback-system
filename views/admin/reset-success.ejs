@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" class="login-fx-html">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body class="login-fx-body">
+  <div class="login-fx-page">
+    <div class="login-fx-bg"></div>
+
+    <div class="login-fx-main">
+      <div class="login-fx-leftpane">
+        <div class="login-fx-left">
+        <img src="/images/cspc-logo.png" alt="CSPC Seal" class="login-fx-logo">
+        <h1 class="login-fx-title">
+          CSPC
+          <span class="accent-gold">FEEDBACK &amp; SUGGESTION SYSTEM</span>
+        </h1>
+        <p class="login-fx-sub">Your voice helps us build a better Camarines Sur Polytechnic Colleges.</p>
+        <div class="login-fx-divider"></div>
+        <blockquote class="login-fx-quote">
+          <span class="quote-mark">&ldquo;</span>Empowering the CSPC community through feedback, suggestions, and continuous improvement.<span class="quote-mark">&rdquo;</span>
+        </blockquote>
+        </div>
+      </div>
+
+      <div class="login-fx-card-wrap">
+        <div class="login-fx-card" style="text-align: center;">
+          <div class="login-fx-avatar" style="background: #eafaf1;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22a76e" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9"/></svg>
+          </div>
+          <h2 class="login-fx-card-title">Password Reset Successful!</h2>
+
+          <div class="login-fx-card-divider"><span></span><i></i><span></span></div>
+
+          <p style="color:#4a5568; font-size:0.92rem; line-height:1.6; margin: 4px 0 20px;">
+            Your password has been updated successfully.
+          </p>
+
+          <a href="/admin/login" class="fx-btn-primary" style="justify-content:center;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-4M10 17l5-5-5-5M15 12H3"/></svg>
+            BACK TO LOGIN
+          </a>
+        </div>
+      </div>
+
+      <svg class="login-fx-wave" viewBox="0 0 1440 120" preserveAspectRatio="none">
+        <path d="M0,64 C 240,120 480,0 720,32 C 960,64 1200,120 1440,64 L1440,120 L0,120 Z"></path>
+      </svg>
+    </div>
+
+
+    <footer class="login-fx-footer">
+      <span>&copy; <%= new Date().getFullYear() %> Camarines Sur Polytechnic Colleges. All rights reserved.</span>
+      <span class="login-fx-tagline">&ldquo;Nurturing Minds. Transforming Lives.&rdquo;</span>
+    </footer>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

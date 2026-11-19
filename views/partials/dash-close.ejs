@@ -1,0 +1,50 @@
+    </main>
+  </div>
+
+  <dialog id="logoutDialog" class="dash-dialog">
+    <h3>Log out?</h3>
+    <p>Are you sure you want to log out of the admin portal?</p>
+    <div class="dash-dialog-actions">
+      <button type="button" class="dash-btn-ghost" id="logoutCancel">Cancel</button>
+      <button type="button" class="dash-btn-blue dash-btn-solid" id="logoutConfirm">Log Out</button>
+    </div>
+  </dialog>
+
+  <script>
+    (function () {
+      var sel = document.getElementById('dashRange');
+      if (sel) sel.addEventListener('change', function () { sel.form.submit(); });
+      var bell = document.getElementById('dashBell');
+      var panel = document.getElementById('dashNotifPanel');
+      if (bell && panel) {
+        var setOpen = function (open) {
+          panel.hidden = !open;
+          document.body.classList.toggle('notif-open', open);
+          bell.setAttribute('aria-expanded', open ? 'true' : 'false');
+        };
+        bell.addEventListener('click', function (e) { e.stopPropagation(); setOpen(panel.hidden); });
+        panel.addEventListener('click', function (e) { e.stopPropagation(); });
+        document.addEventListener('click', function () { setOpen(false); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { setOpen(false); bell.focus(); } });
+      }
+      var logoutForm = document.getElementById('logoutForm');
+      var logoutDlg = document.getElementById('logoutDialog');
+      if (logoutForm && logoutDlg) {
+        logoutForm.addEventListener('submit', function (e) {
+          if (logoutDlg.showModal) { e.preventDefault(); logoutDlg.showModal(); }
+          else if (!window.confirm('Are you sure you want to log out?')) e.preventDefault();
+        });
+        document.getElementById('logoutCancel').addEventListener('click', function () { logoutDlg.close(); });
+        document.getElementById('logoutConfirm').addEventListener('click', function () { logoutForm.submit(); });
+        logoutDlg.addEventListener('click', function (e) { if (e.target === logoutDlg) logoutDlg.close(); });
+      }
+      var flash = document.getElementById('dashFlash');
+      if (flash) {
+        var hide = function () { flash.style.display = 'none'; };
+        document.getElementById('dashFlashClose').addEventListener('click', hide);
+        setTimeout(hide, 6000);
+      }
+    })();
+  </script>
+</body>
+</html>

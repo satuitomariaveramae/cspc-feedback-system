@@ -1,0 +1,2 @@
+<% var _msg = (typeof flash !== 'undefined' && flash && flash.field === field) ? flash.text : ''; %>
+<p class="fx-error" id="err-<%= field %>" role="alert"<%= _msg ? '' : ' hidden' %>><%= _msg %></p>

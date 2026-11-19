@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" class="login-fx-html">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body class="login-fx-body">
+  <div class="login-fx-page">
+    <div class="login-fx-bg"></div>
+
+    <div class="login-fx-main">
+      <div class="login-fx-leftpane">
+        <div class="login-fx-left">
+        <img src="/images/cspc-logo.png" alt="CSPC Seal" class="login-fx-logo">
+        <h1 class="login-fx-title">
+          CSPC
+          <span class="accent-gold">FEEDBACK &amp; SUGGESTION SYSTEM</span>
+        </h1>
+        <p class="login-fx-sub">Your voice helps us build a better Camarines Sur Polytechnic Colleges.</p>
+        <div class="login-fx-divider"></div>
+        <blockquote class="login-fx-quote">
+          <span class="quote-mark">&ldquo;</span>Empowering the CSPC community through feedback, suggestions, and continuous improvement.<span class="quote-mark">&rdquo;</span>
+        </blockquote>
+        </div>
+      </div>
+
+      <div class="login-fx-card-wrap">
+        <div class="login-fx-card" style="text-align: center;">
+          <div class="login-fx-avatar" style="background: #fdecec;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#e5484d" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+          </div>
+          <h2 class="login-fx-card-title">Email Not Found</h2>
+
+          <div class="login-fx-card-divider"><span></span><i></i><span></span></div>
+
+          <p style="color:#4a5568; font-size:0.92rem; line-height:1.6; margin: 4px 0 20px;">
+            Email address not found. Please check your email and try again.
+          </p>
+
+          <a href="/admin/forgot-password" class="fx-btn-primary" style="justify-content:center;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.5 9A9 9 0 0 0 5.6 5.6L1 10M3.5 15A9 9 0 0 0 18.4 18.4L23 14"/></svg>
+            TRY AGAIN
+          </a>
+
+          <a href="/admin/login" class="fx-back-link" style="text-align:center; display:block; margin-top:14px;">&larr; Back to Admin Login</a>
+        </div>
+      </div>
+
+      <svg class="login-fx-wave" viewBox="0 0 1440 120" preserveAspectRatio="none">
+        <path d="M0,64 C 240,120 480,0 720,32 C 960,64 1200,120 1440,64 L1440,120 L0,120 Z"></path>
+      </svg>
+    </div>
+
+
+    <footer class="login-fx-footer">
+      <span>&copy; <%= new Date().getFullYear() %> Camarines Sur Polytechnic Colleges. All rights reserved.</span>
+      <span class="login-fx-tagline">&ldquo;Nurturing Minds. Transforming Lives.&rdquo;</span>
+    </footer>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

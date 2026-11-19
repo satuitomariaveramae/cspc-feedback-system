@@ -1,0 +1,17 @@
+<header class="pub-header">
+  <div class="wrap pub-header-inner">
+    <a href="/" class="pub-brand">
+      <img src="/images/cspc-logo-sm.png" alt="CSPC logo" class="pub-brand-logo" width="40" height="40">
+      <span class="pub-brand-text">
+        <strong>CSPC Feedback</strong>
+        <small>Camarines Sur Polytechnic Colleges</small>
+      </span>
+    </a>
+    <nav class="pub-nav" aria-label="Main">
+      <% const cur = typeof active !== 'undefined' ? active : 'submit'; %>
+      <a href="/" class="<%= cur === 'submit' ? 'active' : '' %>"<%- cur === 'submit' ? ' aria-current="page"' : '' %>>Submit</a>
+      <a href="/track" class="<%= cur === 'track' ? 'active' : '' %>"<%- cur === 'track' ? ' aria-current="page"' : '' %>>Track Status</a>
+    </nav>
+    <a href="/help" class="pub-help<%= cur === 'help' ? ' active' : '' %>"<%- cur === 'help' ? ' aria-current="page"' : '' %>><%- icon('circle-help', 14) %><span>HELP CENTER</span></a>
+  </div>
+</header>

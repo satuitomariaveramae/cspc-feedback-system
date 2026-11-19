@@ -1,0 +1,34 @@
+<%
+  // Locals: rows [{label, title, c}], colors []
+  const maxVal = Math.max(...rows.map(r => r.c), 1);
+  const step = Math.max(1, Math.ceil(maxVal / 4));
+  const axisMax = step * Math.ceil(maxVal / step);
+  const ticks = [];
+  for (let t = 0; t <= axisMax; t += step) ticks.push(t);
+%>
+<% if (rows.length === 0) { %>
+  <p class="dash-empty">No data yet.</p>
+<% } else { %>
+  <div class="hchart">
+    <div class="hchart-body">
+      <div class="hchart-grid" aria-hidden="true">
+        <% ticks.forEach(t => { %><span style="left: <%= (t / axisMax * 100).toFixed(2) %>%"></span><% }) %>
+      </div>
+      <% rows.forEach((r, i) => { %>
+        <div class="hchart-row">
+          <span class="hchart-label" title="<%= r.title %>"><%= r.label %></span>
+          <div class="hchart-track">
+            <div class="hchart-bar" style="width: <%= (r.c / axisMax * 100).toFixed(2) %>%; background: <%= colors[i % colors.length] %>"></div>
+            <span class="hchart-val"><%= r.c %></span>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <div class="hchart-axis">
+      <span class="hchart-axis-pad"></span>
+      <div class="hchart-ticks">
+        <% ticks.forEach(t => { %><span style="left: <%= (t / axisMax * 100).toFixed(2) %>%"><%= t %></span><% }) %>
+      </div>
+    </div>
+  </div>
+<% } %>

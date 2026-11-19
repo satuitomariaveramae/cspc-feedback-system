@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" class="login-fx-html">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body class="login-fx-body">
+  <div class="login-fx-page">
+    <div class="login-fx-bg"></div>
+
+    <div class="login-fx-main">
+      <div class="login-fx-leftpane">
+        <div class="login-fx-left">
+        <img src="/images/cspc-logo.png" alt="CSPC Seal" class="login-fx-logo">
+        <h1 class="login-fx-title">
+          CSPC
+          <span class="accent-gold">FEEDBACK &amp; SUGGESTION SYSTEM</span>
+        </h1>
+        <p class="login-fx-sub">Your voice helps us build a better Camarines Sur Polytechnic Colleges.</p>
+        <div class="login-fx-divider"></div>
+        <blockquote class="login-fx-quote">
+          <span class="quote-mark">&ldquo;</span>Empowering the CSPC community through feedback, suggestions, and continuous improvement.<span class="quote-mark">&rdquo;</span>
+        </blockquote>
+        </div>
+      </div>
+
+      <div class="login-fx-card-wrap">
+        <div class="login-fx-card">
+          <div class="login-fx-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          </div>
+          <h2 class="login-fx-card-title">Verification Code</h2>
+          <p class="login-fx-card-sub">We sent a 6-digit verification code to your registered email.</p>
+
+          <div class="login-fx-card-divider"><span></span><i></i><span></span></div>
+
+          <%- include('../partials/flash') %>
+
+          <form action="/admin/reset-password/code/verify" method="POST" class="login-fx-form" novalidate>
+            <div class="fx-field">
+              <label for="otp-1">6-Digit Code</label>
+              <div class="otp-group<%= codeError ? ' has-error' : '' %>" id="otpGroup" role="group" aria-label="6-digit verification code">
+                <% for (let i = 1; i <= 6; i++) { %>
+                  <input type="text" class="otp-box" id="otp-<%= i %>" inputmode="numeric" pattern="[0-9]" maxlength="1" value="<%= digits.charAt(i - 1) %>" autocomplete="<%= i === 1 ? 'one-time-code' : 'off' %>" aria-label="Digit <%= i %>"<%= (i === 1 && !codeError) ? ' autofocus' : '' %>>
+                <% } %>
+              </div>
+              <input type="hidden" id="code" name="code" value="<%= digits %>">
+              <p class="fx-success" id="otpSuccess" role="status" hidden></p>
+              <p class="fx-error" id="otpError" role="alert"<%= codeError ? '' : ' hidden' %>>The verification code you entered is incorrect.</p>
+            </div>
+
+            <button type="submit" class="fx-btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+              VERIFY CODE
+            </button>
+          </form>
+
+          <form action="/admin/forgot-password" method="POST" class="login-fx-form" id="resendForm" data-cooldown="<%= cooldown || 0 %>" style="margin-top: 4px;">
+            <input type="hidden" name="resend" value="1">
+            <div class="fx-or-divider"><span></span><em>OR</em><span></span></div>
+            <button type="submit" class="fx-btn-secondary" id="resendBtn" style="width: 100%; justify-content: center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.5 9A9 9 0 0 0 5.6 5.6L1 10M3.5 15A9 9 0 0 0 18.4 18.4L23 14"/></svg>
+              <span id="resendLabel">RESEND CODE</span>
+            </button>
+          </form>
+
+          <a href="/admin/forgot-password" class="fx-back-link">&larr; Use a different email</a>
+        </div>
+      </div>
+
+      <svg class="login-fx-wave" viewBox="0 0 1440 120" preserveAspectRatio="none">
+        <path d="M0,64 C 240,120 480,0 720,32 C 960,64 1200,120 1440,64 L1440,120 L0,120 Z"></path>
+      </svg>
+    </div>
+
+
+    <footer class="login-fx-footer">
+      <span>&copy; <%= new Date().getFullYear() %> Camarines Sur Polytechnic Colleges. All rights reserved.</span>
+      <span class="login-fx-tagline">&ldquo;Nurturing Minds. Transforming Lives.&rdquo;</span>
+    </footer>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<%- include('../partials/dash-open', { active: 'feedback', pendingCount: pendingCount, searchValue: filters.q || '', hideSearch: true }) %>
+
+      <div class="dash-head">
+        <div>
+          <h1>All Feedback</h1>
+          <p><%= feedbacks.length %> result<%= feedbacks.length === 1 ? '' : 's' %> found.</p>
+        </div>
+      </div>
+
+      <section class="dash-card dash-filter-card">
+        <form action="/admin/feedbacks" method="GET" class="dash-filter-form">
+          <div class="dash-field dash-field-search">
+            <label for="q">Search</label>
+            <input type="text" id="q" name="q" value="<%= filters.q || '' %>" placeholder="Ticket, subject, category, college, or type...">
+          </div>
+          <div class="dash-field">
+            <label for="status">Status</label>
+            <div class="select">
+              <select id="status" name="status">
+                <option value="">All</option>
+                <% STATUSES.forEach(s => { %>
+                  <option value="<%= s %>" <%= filters.status === s ? 'selected' : '' %>><%= s %></option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+          <div class="dash-field">
+            <label for="category">Category</label>
+            <div class="select">
+              <select id="category" name="category">
+                <option value="">All</option>
+                <% CATEGORIES.forEach(c => { %>
+                  <option value="<%= c %>" <%= filters.category === c ? 'selected' : '' %>><%= c %></option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+          <div class="dash-field">
+            <label for="college">College</label>
+            <div class="select">
+              <select id="college" name="college">
+                <option value="">All</option>
+                <% COLLEGES.forEach(c => { %>
+                  <option value="<%= c %>" <%= filters.college === c ? 'selected' : '' %>><%= shortCollege(c) %></option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+          <div class="dash-field">
+            <label for="type">Type</label>
+            <div class="select">
+              <select id="type" name="type">
+                <option value="">All</option>
+                <% TYPES.forEach(t => { %>
+                  <option value="<%= t %>" <%= filters.type === t ? 'selected' : '' %>><%= t %></option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+          <div class="dash-filter-actions">
+            <button type="submit" class="dash-btn-blue">Filter</button>
+            <a href="/admin/feedbacks" class="dash-btn-ghost">Reset</a>
+          </div>
+        </form>
+      </section>
+
+      <section class="dash-card dash-table-card">
+        <div class="dash-table-wrap">
+          <table class="dash-table">
+            <thead>
+              <tr>
+                <th>Ticket</th>
+                <th>Subject</th>
+                <th>College</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th class="right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% feedbacks.forEach(fb => { %>
+                <tr>
+                  <td class="nowrap ticket"><%= fb.ticket_no %></td>
+                  <td class="subject"><%= fb.subject %></td>
+                  <td class="cat" title="<%= fb.college %>"><%= shortCollege(fb.college) %></td>
+                  <td class="cat"><%= fb.category %></td>
+                  <td class="nowrap type"><%= fb.feedback_type %></td>
+                  <td class="nowrap"><span class="dash-badge <%= statusClass(fb.status) %>"><span class="b-dot"></span><%= fb.status %></span></td>
+                  <td class="nowrap date"><%= new Date(String(fb.created_at).replace(' ', 'T') + 'Z').toLocaleDateString('en-PH', { timeZone: 'Asia/Manila' }) %></td>
+                  <td class="right"><a href="/admin/feedbacks/<%= fb.id %>" class="dash-btn-view">View</a></td>
+                </tr>
+              <% }) %>
+              <% if (feedbacks.length === 0) { %>
+                <tr><td colspan="8" class="dash-empty">No feedback matches your filters.</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <script src="/js/select.js"></script>
+<%- include('../partials/dash-close') %>

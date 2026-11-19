@@ -1,0 +1,30 @@
+<header class="admin-topbar glass">
+  <div class="admin-topbar-inner">
+    <a href="/admin/dashboard" class="brand">
+      <img src="/images/cspc-logo.png" alt="CSPC Seal" class="brand-logo">
+      <span class="brand-text">
+        <strong>Admin Panel</strong>
+        <small>Feedback &amp; Suggestion System</small>
+      </span>
+    </a>
+    <div class="admin-user">
+      <span class="admin-user-name"><%= admin.full_name %></span>
+      <span class="admin-user-role"><%= admin.role %></span>
+      <form action="/admin/logout" method="POST">
+        <button type="submit" class="btn-ghost">Log Out</button>
+      </form>
+    </div>
+  </div>
+</header>
+
+<nav class="admin-sidebar glass">
+  <a href="/admin/dashboard" class="<%= title === 'Dashboard' ? 'active' : '' %>">
+    <span class="nav-icon">&#9635;</span> Dashboard
+  </a>
+  <a href="/admin/feedbacks" class="<%= (title === 'All Feedback') ? 'active' : '' %>">
+    <span class="nav-icon">&#9776;</span> All Feedback
+  </a>
+  <a href="<%= SPLIT_MODE ? PUBLIC_URL : '/' %>" target="_blank" rel="noopener">
+    <span class="nav-icon">&#8599;</span> View Public Form
+  </a>
+</nav>
