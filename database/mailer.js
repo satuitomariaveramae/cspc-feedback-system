@@ -1,26 +1,63 @@
 const nodemailer = require('nodemailer');
 
 // ---------------------------------------------------------------------------
-// Gmail transporter
+// Mail transport
 //
-// Uses a Gmail account + Gmail "App Password" (NOT your normal Gmail password)
-// to send the password-reset email for the Admin Login.
+// Preferred: Brevo HTTPS API (set BREVO_API_KEY). Works on Render free tier,
+// where SMTP is usually blocked.
+// Fallback: Gmail SMTP with an App Password (works locally).
 //
-// Setup:
-//   1. Turn on 2-Step Verification on the Gmail account that will send mail:
-//      https://myaccount.google.com/security
-//   2. Create an App Password: https://myaccount.google.com/apppasswords
-//   3. Put the Gmail address and the 16-character app password into a .env
-//      file at the project root (see .env.example):
-//        GMAIL_USER=your-gmail-address@gmail.com
-//        GMAIL_APP_PASSWORD=your16charapppassword
+// Env variables:
+//   BREVO_API_KEY       Brevo API key (production)
+//   BREVO_SENDER_EMAIL  optional, defaults to GMAIL_USER (must be a verified Brevo sender)
+//   GMAIL_USER          sender address (cspcfeedback@gmail.com)
+//   GMAIL_APP_PASSWORD  Gmail app password (local fallback)
 // ---------------------------------------------------------------------------
 
 let transporter = null;
 let warned = false;
 
+function senderEmail() {
+  return process.env.BREVO_SENDER_EMAIL || process.env.GMAIL_USER;
+}
+
+// Same interface as nodemailer's sendMail, so the functions below don't change.
+function makeBrevoTransport(apiKey) {
+  return {
+    async sendMail({ to, subject, text, html, replyTo }) {
+      const body = {
+        sender: { name: 'CSPC Feedback System', email: senderEmail() },
+        to: [{ email: to }],
+        subject,
+        textContent: text,
+        htmlContent: html
+      };
+      if (replyTo) body.replyTo = { email: replyTo };
+
+      const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': apiKey,
+          'content-type': 'application/json',
+          accept: 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) {
+        throw new Error('Brevo ' + res.status + ': ' + (await res.text()));
+      }
+      return res.json();
+    }
+  };
+}
+
 function getTransporter() {
   if (transporter) return transporter;
+
+  if (process.env.BREVO_API_KEY) {
+    transporter = makeBrevoTransport(process.env.BREVO_API_KEY);
+    return transporter;
+  }
 
   const user = process.env.GMAIL_USER;
   const pass = process.env.GMAIL_APP_PASSWORD;
@@ -28,7 +65,7 @@ function getTransporter() {
   if (!user || !pass) {
     if (!warned) {
       console.warn(
-        '[mailer] GMAIL_USER / GMAIL_APP_PASSWORD are not set in .env — ' +
+        '[mailer] No BREVO_API_KEY or GMAIL credentials set — ' +
           'emails will be logged to the console instead of sent.'
       );
       warned = true;
@@ -46,8 +83,7 @@ function getTransporter() {
 
 /**
  * Sends the password-reset email containing the reset link and the 6-digit
- * backup code. Falls back to console logging if Gmail isn't configured yet,
- * so the feature still works end-to-end in local development.
+ * backup code. Falls back to console logging if no mail is configured.
  */
 async function sendPasswordResetEmail({ to, resetUrl, code, fullName }) {
   const subject = 'CSPC Feedback System — Admin Password Reset';
@@ -77,9 +113,8 @@ async function sendPasswordResetEmail({ to, resetUrl, code, fullName }) {
   const t = getTransporter();
 
   if (!t) {
-    // Dev fallback: no Gmail credentials configured yet.
     console.log('--------------------------------------------------');
-    console.log('[mailer] Gmail not configured — printing reset email instead:');
+    console.log('[mailer] Mail not configured — printing reset email instead:');
     console.log('To:', to);
     console.log('Subject:', subject);
     console.log(text);
@@ -88,7 +123,7 @@ async function sendPasswordResetEmail({ to, resetUrl, code, fullName }) {
   }
 
   await t.sendMail({
-    from: `"CSPC Feedback System" <${process.env.GMAIL_USER}>`,
+    from: `"CSPC Feedback System" <${senderEmail()}>`,
     to,
     subject,
     text,
@@ -112,7 +147,7 @@ function esc(v) {
 }
 
 function getReceiver() {
-  // Change FEEDBACK_RECEIVER in .env when an official address is available.
+  // Change FEEDBACK_RECEIVER when an official address is available.
   // Falls back to the sending account so the demo always works.
   return process.env.FEEDBACK_RECEIVER || process.env.GMAIL_USER;
 }
@@ -154,12 +189,12 @@ async function sendNewFeedbackEmail(fb) {
     </div>`;
 
   if (!t) {
-    console.log('[mailer] Gmail not configured — would have sent notification:\n' + text);
+    console.log('[mailer] Mail not configured — would have sent notification:\n' + text);
     return { delivered: false, reason: 'no-credentials' };
   }
 
   await t.sendMail({
-    from: `"CSPC Feedback System" <${process.env.GMAIL_USER}>`,
+    from: `"CSPC Feedback System" <${senderEmail()}>`,
     to,
     // Reply goes straight to the student (not for anonymous submissions).
     replyTo: !anon && fb.email ? fb.email : undefined,
@@ -201,7 +236,7 @@ async function sendConfirmationEmail(fb) {
     </div>`;
 
   await t.sendMail({
-    from: `"CSPC Feedback System" <${process.env.GMAIL_USER}>`,
+    from: `"CSPC Feedback System" <${senderEmail()}>`,
     to: fb.email,
     subject: `We received your submission [${fb.ticket_no}]`,
     text,
